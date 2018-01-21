@@ -7,5 +7,6 @@
 #include <stdexcept>
 #include <typeinfo>       // operator typeid
 #include <exception>      // std::exception
+#include <string> 
 
 using namespace std;

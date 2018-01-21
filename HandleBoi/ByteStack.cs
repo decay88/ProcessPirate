@@ -6,19 +6,24 @@ using System.Threading.Tasks;
 
 namespace HandleBoi
 {
-    class ByteStack : Stack<byte>
+    class ByteStack
     {
-        public ByteStack(int capacity) : base(capacity)
+        private int capacity;
+        List<byte> allBytes = new List<byte>();
+        public ByteStack(int capacity)
         {
-            
+            this.capacity = capacity;
         }
 
         public void Push(byte[] bytes)
         {
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                this.Push(bytes[i]);
-            }
+            this.allBytes.AddRange(bytes); 
+        }
+
+        public byte[] GetBytes()
+        {
+            allBytes.AddRange(new byte[101 - allBytes.Count]);
+            return allBytes.ToArray();
         }
     }
 }

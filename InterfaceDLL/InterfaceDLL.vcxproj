@@ -22,7 +22,7 @@
     <ProjectGuid>{7C99B3EE-54F9-4AEF-BEAF-A928800D0C0C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>InterfaceDLL</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -147,10 +147,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="remotecall.cpp" />
     <ClCompile Include="socketclient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imports.h" />
+    <ClInclude Include="packaging.h" />
+    <ClInclude Include="remotecall.h" />
     <ClInclude Include="secur.h" />
     <ClInclude Include="socketclient.h" />
   </ItemGroup>

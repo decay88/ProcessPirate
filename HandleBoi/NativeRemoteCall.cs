@@ -10,11 +10,16 @@ namespace HandleBoi
     class NativeRemoteCall
     {
         private const int payloadSize = 100;
+        private readonly SocketServer socket; 
+        private List<byte> bytesRec = new List<byte>();
+        private readonly CallbackWatcher callbackWatcher;
 
         private enum FunctionIdentifier : byte
         {
             READ_PROCESS_MEMORY,
-            WRITE_PROCESS_MEMORY
+            WRITE_PROCESS_MEMORY,
+            GET_PROC_ADDRESS,
+            OPEN_PROCESS
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -23,6 +28,12 @@ namespace HandleBoi
             public FunctionIdentifier functionIdentifier;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = payloadSize)]
             public byte[] payload;
+        }
+
+        public NativeRemoteCall(ref SocketServer socket, int callbackTimeout)
+        {
+            this.socket = socket;
+            callbackWatcher = new CallbackWatcher(callbackTimeout);
         }
 
         private byte[] getBytes(object obj)
@@ -57,14 +68,58 @@ namespace HandleBoi
             callStack.Push(getBytes(lpBaseAddress));
             callStack.Push(getBytes(dwSize));
 
-            RemoteCallInformation remoteCallInfo = new RemoteCallInformation();
-            remoteCallInfo.functionIdentifier = FunctionIdentifier.READ_PROCESS_MEMORY;
-            remoteCallInfo.payload = callStack.ToArray();
-
+            RemoteCallInformation remoteCallInfo =
+                new RemoteCallInformation
+                {
+                    functionIdentifier = FunctionIdentifier.READ_PROCESS_MEMORY,
+                    payload = callStack.GetBytes()
+                };
             //send to client
+            socket.SendBytes(getBytes(remoteCallInfo));
             //receive answer
-            byte[] result = new byte[101];
+            byte[] result = callbackWatcher.WaitForCallback(socket);
             return fromBytes<T>(result);
+        }
+
+        public IntPtr GetProcAddress(IntPtr hModule, string procName)
+        {
+            ByteStack callStack = new ByteStack(payloadSize);
+
+            callStack.Push(getBytes(hModule));
+            callStack.Push(Encoding.ASCII.GetBytes(procName));
+
+            RemoteCallInformation remoteCallInfo =
+                new RemoteCallInformation
+                {
+                    functionIdentifier = FunctionIdentifier.GET_PROC_ADDRESS,
+                    payload = callStack.GetBytes()
+                };
+            //send to client
+            socket.SendBytes(getBytes(remoteCallInfo));
+            //receive answer
+            byte[] result = callbackWatcher.WaitForCallback(socket);
+            if(result == null) 
+                return IntPtr.Zero;
+            return fromBytes<IntPtr>(result);
+        }
+
+        //return saved in host
+        public void OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId)
+        {
+            ByteStack callStack = new ByteStack(payloadSize);
+
+            callStack.Push(getBytes(dwDesiredAccess));
+            callStack.Push(getBytes(bInheritHandle));
+            callStack.Push(getBytes(dwProcessId));
+
+            RemoteCallInformation remoteCallInfo =
+                new RemoteCallInformation
+                {
+                    functionIdentifier = FunctionIdentifier.OPEN_PROCESS,
+                    payload = callStack.GetBytes()
+                };
+            //send to client
+            socket.SendBytes(getBytes(remoteCallInfo));
         }
     }
 }

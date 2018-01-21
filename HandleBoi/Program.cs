@@ -55,10 +55,17 @@ namespace HandleBoi
             SocketServer server = new SocketServer(IP_ADDR, SERVER_PORT, INPUT_BUFF_SIZE);
             server.Start(onMessageReceive);
 
+            NativeRemoteCall remoteCall = new NativeRemoteCall(ref server, 1000);
+
             while (true)
             {
-                String msg = Console.ReadLine();
-                server.SendString(msg);
+                Console.ReadKey();
+                Console.WriteLine("calling...");
+                //remoteCall.OpenProcess(
+                //    NativeImports.Flags.HandlePrivileges.PROCESS_ALL_ACCESS,
+                //    false,
+                //    9692
+                //);
             }
         }
     }

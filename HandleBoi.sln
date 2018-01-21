@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HandleBoi", "HandleBoi\Hand
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InterfaceDLL", "InterfaceDLL\InterfaceDLL.vcxproj", "{7C99B3EE-54F9-4AEF-BEAF-A928800D0C0C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testebola", "testebola\testebola.vcxproj", "{143495A7-F625-4506-823C-2C25C02B0ADC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,16 +39,6 @@ Global
 		{7C99B3EE-54F9-4AEF-BEAF-A928800D0C0C}.Release|x64.Build.0 = Release|x64
 		{7C99B3EE-54F9-4AEF-BEAF-A928800D0C0C}.Release|x86.ActiveCfg = Release|Win32
 		{7C99B3EE-54F9-4AEF-BEAF-A928800D0C0C}.Release|x86.Build.0 = Release|Win32
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Debug|x64.ActiveCfg = Debug|x64
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Debug|x64.Build.0 = Debug|x64
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Debug|x86.ActiveCfg = Debug|Win32
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Debug|x86.Build.0 = Debug|Win32
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Release|Any CPU.ActiveCfg = Release|Win32
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Release|x64.ActiveCfg = Release|x64
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Release|x64.Build.0 = Release|x64
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Release|x86.ActiveCfg = Release|Win32
-		{143495A7-F625-4506-823C-2C25C02B0ADC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

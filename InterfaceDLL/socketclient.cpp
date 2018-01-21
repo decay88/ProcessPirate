@@ -23,7 +23,6 @@ VOID SocketClient::messageLoop() {
 		int iResult = recv(server, pInBuffer, nInBufferSize, 0);
 
 		if (iResult > 0) {
-			cout << "received " << iResult << "bytes" << endl;
 			(*this->onDataReceiveCallback)(pInBuffer, nInBufferSize);
 		}
 		else if(iResult < 0) {
@@ -33,7 +32,7 @@ VOID SocketClient::messageLoop() {
 }
 
 BOOL SocketClient::sendData(const char* data, int byteCount) {
-	return	send(server, data, byteCount, 0);
+	return send(server, data, byteCount, 0);
 }
 
 BOOL SocketClient::sendData(string data) {
@@ -61,12 +60,7 @@ void SocketClient::start(DataReceive onDataReceiveCallback) {
 
 	this->onDataReceiveCallback = onDataReceiveCallback;
 
-	cout << "starting" << endl;
 	int status = connect(server, (SOCKADDR *)&addr, sizeof(addr));
-	if (status == SOCKET_ERROR)
-		cout << "connect error";
-	else
-		cout << "connected." << endl;
 
 	if (!hMessageLoopThread)
 		hMessageLoopThread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)trampolineSocket, this, NULL, NULL);

@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -18,7 +18,7 @@ namespace HandleBoi
         private byte[] inputBuffer;
 
         public delegate void MessageReceiveCallback(byte[] data, int length);
-        private MessageReceiveCallback onMessageReceiveCallback;
+        public MessageReceiveCallback onMessageReceiveCallback { get; set; }
 
         public SocketServer(String ip, int port, int nInBufferSize)
         {
