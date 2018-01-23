@@ -18,11 +18,8 @@ namespace HandleBoi
         private const String dllPath = @"D:\h4x\eigene\HandleBoi\x64\Release\InterfaceDLL.dll";
 #endif
 
-        private static Pipe pipe;
-
         private static void onMessageReceive(byte[] data, int length)
         {
-            Console.WriteLine(Encoding.ASCII.GetString(data, 0, length));
         }
 
         // Incoming data from the client.  
@@ -44,11 +41,7 @@ namespace HandleBoi
             }
             
             process.LoadLibraryA(dllPath);
-                       
-            //foreach (ProcessModule module in process.Modules)
-            //{
-            //    Console.WriteLine(module.FileName);
-            //}
+
             
             Process.LeaveDebugMode();
 
@@ -59,13 +52,15 @@ namespace HandleBoi
 
             while (true)
             {
-                Console.ReadKey();
                 Console.WriteLine("calling...");
-                //remoteCall.OpenProcess(
-                //    NativeImports.Flags.HandlePrivileges.PROCESS_ALL_ACCESS,
-                //    false,
-                //    9692
-                //);
+                remoteCall.OpenProcess(
+                    NativeImports.Flags.HandlePrivileges.PROCESS_ALL_ACCESS,
+                    false,
+                    6352
+                );
+                Console.ReadKey();
+                int i = remoteCall.ReadProcessMemory<int>(new IntPtr(0x196CF96093C));
+                Console.WriteLine(i);
             }
         }
     }

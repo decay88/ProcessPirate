@@ -25,11 +25,12 @@ namespace HandleBoi
             this.timeout = timeout;
         }
 
-        public byte[] WaitForCallback(SocketServer server)
+        public byte[] SendAndWaitForCallback(SocketServer server, byte[] data)
         {
             server.onMessageReceiveCallback += onMessageReceive;
             stopwatch.Reset();
             stopwatch.Start();
+            server.SendBytes(data);
             result = null;
             while (!receivedNewData)
             {

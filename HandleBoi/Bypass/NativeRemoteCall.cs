@@ -19,7 +19,8 @@ namespace HandleBoi
             READ_PROCESS_MEMORY,
             WRITE_PROCESS_MEMORY,
             GET_PROC_ADDRESS,
-            OPEN_PROCESS
+            OPEN_PROCESS,
+            GET_MODULE_BASE
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -61,12 +62,12 @@ namespace HandleBoi
             return obj;
         }
 
-        public T ReadProcessMemory<T>(IntPtr lpBaseAddress, uint dwSize)
+        public T ReadProcessMemory<T>(IntPtr lpBaseAddress)
         {
             ByteStack callStack = new ByteStack(payloadSize);
 
             callStack.Push(getBytes(lpBaseAddress));
-            callStack.Push(getBytes(dwSize));
+            callStack.Push(getBytes(Marshal.SizeOf(typeof(T))));
 
             RemoteCallInformation remoteCallInfo =
                 new RemoteCallInformation
@@ -75,9 +76,8 @@ namespace HandleBoi
                     payload = callStack.GetBytes()
                 };
             //send to client
-            socket.SendBytes(getBytes(remoteCallInfo));
             //receive answer
-            byte[] result = callbackWatcher.WaitForCallback(socket);
+            byte[] result = callbackWatcher.SendAndWaitForCallback(socket, getBytes(remoteCallInfo));
             return fromBytes<T>(result);
         }
 
@@ -95,9 +95,8 @@ namespace HandleBoi
                     payload = callStack.GetBytes()
                 };
             //send to client
-            socket.SendBytes(getBytes(remoteCallInfo));
             //receive answer
-            byte[] result = callbackWatcher.WaitForCallback(socket);
+            byte[] result = callbackWatcher.SendAndWaitForCallback(socket, getBytes(remoteCallInfo));
             if(result == null) 
                 return IntPtr.Zero;
             return fromBytes<IntPtr>(result);
@@ -120,6 +119,24 @@ namespace HandleBoi
                 };
             //send to client
             socket.SendBytes(getBytes(remoteCallInfo));
+        }
+
+        public IntPtr GetModuleBase(string moduleName)
+        {
+            ByteStack callStack = new ByteStack(payloadSize);
+
+            callStack.Push(Encoding.Unicode.GetBytes(moduleName));
+            RemoteCallInformation remoteCallInfo =
+                new RemoteCallInformation
+                {
+                    functionIdentifier = FunctionIdentifier.GET_MODULE_BASE,
+                    payload = callStack.GetBytes()
+                };
+
+            byte[] result = callbackWatcher.SendAndWaitForCallback(socket, getBytes(remoteCallInfo));
+            if (result == null)
+                return IntPtr.Zero;
+            return fromBytes<IntPtr>(result);
         }
     }
 }

@@ -16,9 +16,7 @@ HANDLE hProc;
 #define HOST_PORT 1337
 #define INPUT_BUFF_SIZE sizeof(RemoteCallInformation)
 
-void onDataReceive(char* msg, int length) {
-	pSocketClient->sendData("C++ got data.");
-	
+void onDataReceive(char* msg, int length) {	
 	pRemoteCallInformation remoteCallInfo = (pRemoteCallInformation)msg;
 
 	switch (remoteCallInfo->functionIdentifier) {
@@ -32,10 +30,18 @@ void onDataReceive(char* msg, int length) {
 		break;
 	}
 	case FunctionIdentifier::READ_PROCESS_MEMORY:
+	{
+		RemoteCall::ReadProcessMemoryR(&hProc, pSocketClient, remoteCallInfo->payload);
 		break;
+	}
 
 	case FunctionIdentifier::WRITE_PROCESS_MEMORY:
 		break;
+
+	case FunctionIdentifier::GET_MODULE_BASE:
+	{
+		RemoteCall::GetModuleBaseR(&hProc, pSocketClient, remoteCallInfo->payload);
+	}
 
 	default:
 		break;
@@ -61,7 +67,7 @@ BOOL WINAPI DllMain(
 		pSocketClient = new SocketClient(HOST_IP, HOST_PORT, INPUT_BUFF_SIZE);
 		pSocketClient->start(onDataReceive);
 		cout << "Setup..." << endl;
-		pSocketClient->sendData("hello dud.");
+		pSocketClient->sendData("C++ connected");
 	}
 	return TRUE;
 }

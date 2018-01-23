@@ -38,13 +38,11 @@ namespace HandleBoi
         private void MessageLoop()
         {
             Console.WriteLine("listening for messages...");
-
             while (true)
             {
                 int bytesRecv = handler.Receive(inputBuffer);
                 if (bytesRecv > 0)
                 {
-                    Console.WriteLine("got message.");
                     this.onMessageReceiveCallback(inputBuffer, bytesRecv);
                 }
             }
