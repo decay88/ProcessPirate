@@ -20,8 +20,6 @@ void RemoteCall::ReadProcessMemoryR(HANDLE* hProc, SocketClient* pSocketClient, 
 	if (!readSuccess)
 		cout << "read failed. error: " << GetLastError() << endl;
 
-	int testResult = *(int*)out;
-
 	pSocketClient->sendData(out, nSize);
 	delete[] out;
 	out = NULL;
@@ -69,10 +67,17 @@ void RemoteCall::GetModuleBaseR(HANDLE* hProc, SocketClient* pSocketClient, byte
 		{
 			LPWSTR szModName = new WCHAR[MAX_PATH];
 
-			if (GetModuleFileNameEx(hProcess, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR)))
+			if (GetModuleFileNameEx(hProcess, hMods[i], szModName, MAX_PATH * sizeof(TCHAR)))
 			{
-				if (wcscmp(szModName, desired)) {
-					pSocketClient->sendData((char*)hMods[i], sizeof(HMODULE));
+				LPWSTR pwc = wcstok(szModName, L"\\");
+				LPWSTR last = NULL;
+				while (pwc){
+					last = pwc;
+					pwc = wcstok(NULL, L"\\");					 
+				}
+				if (wcscmp(last, desired) == 0) {
+					pSocketClient->sendData((char*)(hMods[i]), sizeof(HMODULE));
+					cout << "sent hmodule" << endl;
 					return;
 				}
 			}

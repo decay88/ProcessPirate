@@ -1,7 +1,6 @@
 #pragma once
 #include "socketclient.h"
 
-
 class RemoteCall {
 
 private:

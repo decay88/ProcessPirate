@@ -9,7 +9,8 @@ namespace HandleBoi
 {
     class CallbackWatcher
     {
-        private int timeout;
+        private readonly int timeout;
+        private readonly SocketServer server;
         private bool receivedNewData = false;
         private byte[] result;
         private Stopwatch stopwatch = new Stopwatch();
@@ -20,26 +21,26 @@ namespace HandleBoi
             receivedNewData = true;
         }
 
-        public CallbackWatcher(int timeout)
+        public CallbackWatcher(SocketServer server, int timeout)
         {
             this.timeout = timeout;
+            this.server = server;
+            server.onMessageReceiveCallback += onMessageReceive;
         }
 
-        public byte[] SendAndWaitForCallback(SocketServer server, byte[] data)
+        public byte[] SendAndWaitForCallback(byte[] data, int timeout = 0)
         {
-            server.onMessageReceiveCallback += onMessageReceive;
+            result = null;
+            receivedNewData = false;
             stopwatch.Reset();
             stopwatch.Start();
             server.SendBytes(data);
-            result = null;
             while (!receivedNewData)
             {
-                if(stopwatch.ElapsedMilliseconds > this.timeout)
+                if(stopwatch.ElapsedMilliseconds > (timeout > 0 ? timeout : this.timeout))
                     throw new Exception("function callback timeout!");
             }
             stopwatch.Stop();
-            server.onMessageReceiveCallback -= onMessageReceive;
-            receivedNewData = false;
             return result;
         }
     }

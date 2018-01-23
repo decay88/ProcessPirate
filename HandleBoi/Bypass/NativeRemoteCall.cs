@@ -34,7 +34,7 @@ namespace HandleBoi
         public NativeRemoteCall(ref SocketServer socket, int callbackTimeout)
         {
             this.socket = socket;
-            callbackWatcher = new CallbackWatcher(callbackTimeout);
+            callbackWatcher = new CallbackWatcher(socket, callbackTimeout);
         }
 
         private byte[] getBytes(object obj)
@@ -77,7 +77,7 @@ namespace HandleBoi
                 };
             //send to client
             //receive answer
-            byte[] result = callbackWatcher.SendAndWaitForCallback(socket, getBytes(remoteCallInfo));
+            byte[] result = callbackWatcher.SendAndWaitForCallback(getBytes(remoteCallInfo));
             return fromBytes<T>(result);
         }
 
@@ -96,10 +96,8 @@ namespace HandleBoi
                 };
             //send to client
             //receive answer
-            byte[] result = callbackWatcher.SendAndWaitForCallback(socket, getBytes(remoteCallInfo));
-            if(result == null) 
-                return IntPtr.Zero;
-            return fromBytes<IntPtr>(result);
+            byte[] result = callbackWatcher.SendAndWaitForCallback(getBytes(remoteCallInfo));
+            return result == null ? IntPtr.Zero : fromBytes<IntPtr>(result);
         }
 
         //return saved in host
@@ -133,10 +131,8 @@ namespace HandleBoi
                     payload = callStack.GetBytes()
                 };
 
-            byte[] result = callbackWatcher.SendAndWaitForCallback(socket, getBytes(remoteCallInfo));
-            if (result == null)
-                return IntPtr.Zero;
-            return fromBytes<IntPtr>(result);
+            byte[] result = callbackWatcher.SendAndWaitForCallback(getBytes(remoteCallInfo), 2000);
+            return result == null ? IntPtr.Zero : fromBytes<IntPtr>(result);
         }
     }
 }
