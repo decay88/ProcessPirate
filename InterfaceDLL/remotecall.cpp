@@ -27,7 +27,6 @@ void RemoteCall::ReadProcessMemoryR(HANDLE* hProc, SocketClient* pSocketClient, 
 
 void RemoteCall::WriteProcessMemoryR(HANDLE* hProc, SocketClient* pSocketClient, byte stack[100]) {
 
-
 }
 
 void RemoteCall::GetProcessAddressR(SocketClient* pSocketClient, byte stack[100]) {
@@ -76,8 +75,10 @@ void RemoteCall::GetModuleBaseR(HANDLE* hProc, SocketClient* pSocketClient, byte
 					pwc = wcstok(NULL, L"\\");					 
 				}
 				if (wcscmp(last, desired) == 0) {
-					pSocketClient->sendData((char*)(hMods[i]), sizeof(HMODULE));
-					cout << "sent hmodule" << endl;
+					HMODULE hMod = hMods[i];
+					pSocketClient->sendData((char*)&hMod, sizeof(HMODULE));
+					delete[] szModName;
+					szModName = NULL;
 					return;
 				}
 			}

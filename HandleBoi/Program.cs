@@ -56,19 +56,20 @@ namespace HandleBoi
                 remoteCall.OpenProcess(
                     NativeImports.Flags.HandlePrivileges.PROCESS_ALL_ACCESS,
                     false,
-                    8668
+                    5188
                 );
                 Console.ReadKey();
-                int i = remoteCall.ReadProcessMemory<int>(new IntPtr(0x675F7A57A0));
-                Console.WriteLine(i);
-                //y
-                //
-                //  IntPtr hModule = remoteCall.GetModuleBase("mspaint.exe");
-                //
-                //tch (Exception e)
-                //
-                //  Console.WriteLine(e);
-                //
+
+                try
+                {
+                    IntPtr hModule = remoteCall.GetModuleBase("mspaint.exe");
+                    Console.WriteLine(hModule);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                
             }
         }
     }
