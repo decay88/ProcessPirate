@@ -7,6 +7,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using HandleBoi.Cheat;
+using System.IO;
 
 namespace HandleBoi
 {
@@ -34,6 +36,7 @@ namespace HandleBoi
             Process.EnterDebugMode();
             int pid = Convert.ToInt32(Console.ReadLine());
             Process process =  Process.GetProcessById(pid);
+            process.Handle
             
             if (process == null)
             {
@@ -41,35 +44,28 @@ namespace HandleBoi
             }
             
             process.LoadLibraryA(dllPath);
-
             
             Process.LeaveDebugMode();
 
             SocketServer server = new SocketServer(IP_ADDR, SERVER_PORT, INPUT_BUFF_SIZE);
             server.Start(onMessageReceive);
 
-            NativeRemoteCall remoteCall = new NativeRemoteCall(ref server, 1000);
+            NativeRemoteCall remoteCall = new NativeRemoteCall(ref server, 2000);
 
+            Console.WriteLine("calling...");
+
+            remoteCall.OpenProcess(
+                NativeImports.Flags.HandlePrivileges.PROCESS_ALL_ACCESS,
+                false,
+                Process.GetProcessesByName("tslgame")[0].Id
+            );
+            
+            GameDataParser dataParser = new GameDataParser(remoteCall);
             while (true)
             {
-                Console.WriteLine("calling...");
-                remoteCall.OpenProcess(
-                    NativeImports.Flags.HandlePrivileges.PROCESS_ALL_ACCESS,
-                    false,
-                    5188
-                );
+                Console.WriteLine("+++++++++++++++++++++++++++");
                 Console.ReadKey();
-
-                try
-                {
-                    IntPtr hModule = remoteCall.GetModuleBase("mspaint.exe");
-                    Console.WriteLine(hModule);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-                
+                Console.WriteLine(remoteCall.GetModuleBase("tslgame.exe"));
             }
         }
     }

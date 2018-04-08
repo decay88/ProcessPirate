@@ -37,8 +37,11 @@ namespace HandleBoi
             server.SendBytes(data);
             while (!receivedNewData)
             {
-                if(stopwatch.ElapsedMilliseconds > (timeout > 0 ? timeout : this.timeout))
-                    throw new Exception("function callback timeout!");
+                if (stopwatch.ElapsedMilliseconds > (timeout > 0 ? timeout : this.timeout))
+                {
+                    Console.WriteLine("function callback timeout!");
+                    return result;
+                }
             }
             stopwatch.Stop();
             return result;

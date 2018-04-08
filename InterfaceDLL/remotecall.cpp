@@ -56,8 +56,9 @@ void RemoteCall::GetModuleBaseR(HANDLE* hProc, SocketClient* pSocketClient, byte
 	DWORD cbNeeded; 
 	unsigned int i;
 	LPWSTR desired = (LPWSTR)stack;
+	DWORD lastError;
 
-	if (hProcess == NULL)
+	if (hProcess == NULL || hProcess == INVALID_HANDLE_VALUE)
 		return;
 
 	if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded))
@@ -86,4 +87,6 @@ void RemoteCall::GetModuleBaseR(HANDLE* hProc, SocketClient* pSocketClient, byte
 			szModName = NULL;
 		}
 	}
+	else
+		lastError = GetLastError();
 }

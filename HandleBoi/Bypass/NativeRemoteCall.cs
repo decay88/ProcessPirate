@@ -131,7 +131,7 @@ namespace HandleBoi
                     payload = callStack.GetBytes()
                 };
 
-            byte[] result = callbackWatcher.SendAndWaitForCallback(getBytes(remoteCallInfo), 2000);
+            byte[] result = callbackWatcher.SendAndWaitForCallback(getBytes(remoteCallInfo));
             return result == null ? IntPtr.Zero : fromBytes<IntPtr>(result);
         }
     }
