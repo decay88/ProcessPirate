@@ -8,3 +8,6 @@ memory and reading/writing to it. Using this technique the host can "proxy" his 
 avoid getting caught by 3rd parties (figure1).
 
 ## ![Figure1 / how it works](https://github.com/GreenPIsoftware/ProcessPirate/blob/master/proc_pirate.png)
+
+
+# DONT USE THIS FOR ANYTHING MALICIOUS/CRIMINAL! I made this to cheat in videogames!!
