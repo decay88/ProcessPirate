@@ -74,7 +74,6 @@
     <Compile Include="Bypass\DLLinjection.cs" />
     <Compile Include="Bypass\NativeImports.cs" />
     <Compile Include="Bypass\NativeRemoteCall.cs" />
-    <Compile Include="Cheat\GameDataParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bypass\SocketServer.cs" />

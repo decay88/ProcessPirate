@@ -3,50 +3,29 @@
 #include <psapi.h>
 #include <tchar.h>
 
-void RemoteCall::ReadProcessMemoryR(HANDLE* hProc, SocketClient* pSocketClient, byte stack[100]) {
+void RemoteCall::ReadProcessMemoryR(HANDLE* hProc, SocketClient* pSocketClient, RPM_args args) {
 
-	int i = 0;
-	LPCVOID  lpBaseAddress;
-	memcpy(&lpBaseAddress, stack + i, sizeof(lpBaseAddress));
-	i += sizeof(lpBaseAddress);
-
-	SIZE_T  nSize;
-	memcpy(&nSize, stack + i, sizeof(nSize));
-	i += sizeof(nSize);
-
-	SIZE_T NumberOfBytesRead; 
-	char* out = new char[nSize];
-	BOOL readSuccess = ReadProcessMemory(*hProc, lpBaseAddress, out, nSize, &NumberOfBytesRead);
+	char* out = new char[args.nSize];
+	BOOL readSuccess = ReadProcessMemory(*hProc, args.lpBaseAddress, out, args.nSize, &args.NumberOfBytesRead);
 	if (!readSuccess)
 		cout << "read failed. error: " << GetLastError() << endl;
 
-	pSocketClient->sendData(out, nSize);
+	pSocketClient->sendData(out, args.nSize);
 	delete[] out;
 	out = NULL;
 }
 
-void RemoteCall::WriteProcessMemoryR(HANDLE* hProc, SocketClient* pSocketClient, byte stack[100]) {
+void RemoteCall::WriteProcessMemoryR(HANDLE* hProc, SocketClient* pSocketClient, WPM_args args) {
+	
+}
+
+void RemoteCall::GetProcessAddressR(SocketClient* pSocketClient, GetProcAddr_args args) {
 
 }
 
-void RemoteCall::GetProcessAddressR(SocketClient* pSocketClient, byte stack[100]) {
-
-}
-
-void RemoteCall::OpenProcessR(HANDLE* hProc, byte stack[100]) {
-	int i = 0;
-	DWORD dwDesiredAccess;
-	memcpy(&dwDesiredAccess, stack + i, sizeof(dwDesiredAccess));
-	i += sizeof(dwDesiredAccess);
-
-	BOOL bInheritHandle;
-	memcpy(&bInheritHandle, stack + i, sizeof(bInheritHandle));
-	i += sizeof(bInheritHandle);
-
-	DWORD dwProcessId;
-	memcpy(&dwProcessId, stack + i, sizeof(dwProcessId));
-
-	*hProc = OpenProcess(dwDesiredAccess, bInheritHandle, dwProcessId);	
+void RemoteCall::OpenProcessR(HANDLE* hProc, OpenProc_args args) {
+	
+	*hProc = OpenProcess(args.dwDesiredAccess, args.bInheritHandle, args.dwProcessId);
 }
 
 void RemoteCall::GetModuleBaseR(HANDLE* hProc, SocketClient* pSocketClient, byte stack[100])

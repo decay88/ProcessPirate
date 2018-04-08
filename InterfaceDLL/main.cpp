@@ -26,21 +26,25 @@ void onDataReceive(char* msg, int length) {
 
 	case FunctionIdentifier::OPEN_PROCESS:
 	{
-		RemoteCall::OpenProcessR(&hProc, remoteCallInfo->payload);
+		RemoteCall::OpenProcessR(&hProc, *(RemoteCall::OpenProc_args*)remoteCallInfo->payload);
 		break;
 	}
 	case FunctionIdentifier::READ_PROCESS_MEMORY:
 	{
-		RemoteCall::ReadProcessMemoryR(&hProc, pSocketClient, remoteCallInfo->payload);
+		RemoteCall::ReadProcessMemoryR(&hProc, pSocketClient, *(RemoteCall::RPM_args*)remoteCallInfo->payload);
 		break;
 	}
 
 	case FunctionIdentifier::WRITE_PROCESS_MEMORY:
+	{
+		RemoteCall::WriteProcessMemoryR(&hProc, pSocketClient, *(RemoteCall::WPM_args*)remoteCallInfo->payload)
 		break;
+	}
 
 	case FunctionIdentifier::GET_MODULE_BASE:
 	{
 		RemoteCall::GetModuleBaseR(&hProc, pSocketClient, remoteCallInfo->payload);
+		break;
 	}
 
 	default:
